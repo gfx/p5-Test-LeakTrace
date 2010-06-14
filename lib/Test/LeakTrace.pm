@@ -81,7 +81,11 @@ sub leaks_cmp_ok(&$$;$){
     # calls to prepare cache in $block
     $block->();
 
-    my $got = _do_leaktrace($block, 'leaked_count', 0);
+    #my $got = _do_leaktrace($block, 'leaked_count', 0);
+    my($start, $got);
+    $start = _count_sv_in_arena();
+    $block->();
+    $got   = _count_sv_in_arena() - $start;
 
     my $desc = sprintf 'leaks %s %-2s %s', $got, $cmp_op, $expected;
     if(defined $description){

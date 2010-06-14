@@ -91,6 +91,15 @@ struct stateinfo{
     } STMT_END
 
 
+static UV
+count_sv_in_arena(pTHX) {
+    UV count = 0;
+    START_ARENA_VISIT {
+        count++;
+    } END_ARENA_VISIT;
+    return count;
+}
+
 #define ptr_table_free_val(tbl) my_ptr_table_free_val(aTHX_ tbl)
 static void
 my_ptr_table_free_val(pTHX_ PTR_TBL_t * const tbl){
@@ -489,3 +498,9 @@ CODE:
 OUTPUT:
     RETVAL
 
+UV
+_count_sv_in_arena()
+CODE:
+    RETVAL = count_sv_in_arena(aTHX);
+OUTPUT:
+    RETVAL
