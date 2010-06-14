@@ -14,100 +14,100 @@ our @ISA = qw(Test::Builder::Module);
 
 use Exporter qw(import); # use Exporter::import for backward compatibility
 our @EXPORT = qw(
-	leaktrace leaked_refs leaked_info leaked_count
-	no_leaks_ok leaks_cmp_ok
+    leaktrace leaked_refs leaked_info leaked_count
+    no_leaks_ok leaks_cmp_ok
 );
 
 our %EXPORT_TAGS = (
-	all  => \@EXPORT,
-	test => [qw(no_leaks_ok leaks_cmp_ok)],
-	util => [qw(leaktrace leaked_refs leaked_info leaked_count)],
+    all  => \@EXPORT,
+    test => [qw(no_leaks_ok leaks_cmp_ok)],
+    util => [qw(leaktrace leaked_refs leaked_info leaked_count)],
 );
 
 
 sub _do_leaktrace{
-	my($block, $name, $need_stateinfo, $mode) = @_;
+    my($block, $name, $need_stateinfo, $mode) = @_;
 
-	if(!defined($mode) && !defined wantarray){
-		warnings::warnif void => "Useless use of $name() in void context";
-	}
+    if(!defined($mode) && !defined wantarray){
+        warnings::warnif void => "Useless use of $name() in void context";
+    }
 
-	local $SIG{__DIE__} = 'DEFAULT';
+    local $SIG{__DIE__} = 'DEFAULT';
 
-	_start($need_stateinfo);
-	eval{
-		$block->();
-	};
-	if($@){
-		_finish(-silent);
-		die $@;
-	}
+    _start($need_stateinfo);
+    eval{
+        $block->();
+    };
+    if($@){
+        _finish(-silent);
+        die $@;
+    }
 
-	return _finish($mode);
+    return _finish($mode);
 }
 
 sub leaked_refs(&){
-	my($block) = @_;
-	return _do_leaktrace($block, 'leaked_refs', 0);
+    my($block) = @_;
+    return _do_leaktrace($block, 'leaked_refs', 0);
 }
 
 sub leaked_info(&){
-	my($block) = @_;
-	return _do_leaktrace($block, 'leaked_refs', 1);
+    my($block) = @_;
+    return _do_leaktrace($block, 'leaked_refs', 1);
 }
 
 sub leaked_count(&){
-	my($block) = @_;
-	return scalar _do_leaktrace($block, 'leaked_count', 0);
+    my($block) = @_;
+    return scalar _do_leaktrace($block, 'leaked_count', 0);
 }
 
 sub leaktrace(&;$){
-	my($block, $mode) = @_;
-	_do_leaktrace($block, 'leaktrace', 1, defined($mode) ? $mode : -simple);
-	return;
+    my($block, $mode) = @_;
+    _do_leaktrace($block, 'leaktrace', 1, defined($mode) ? $mode : -simple);
+    return;
 }
 
 
 sub leaks_cmp_ok(&$$;$){
-	my($block, $cmp_op, $expected, $description) = @_;
+    my($block, $cmp_op, $expected, $description) = @_;
 
-	my $Test = __PACKAGE__->builder;
+    my $Test = __PACKAGE__->builder;
 
-	if(!_runops_installed()){
-		my $mod = exists $INC{'Devel/Cover.pm'} ? 'Devel::Cover' : 'strange runops routines';
-		return $Test->ok(1, "skipped (under $mod)");
-	}
+    if(!_runops_installed()){
+        my $mod = exists $INC{'Devel/Cover.pm'} ? 'Devel::Cover' : 'strange runops routines';
+        return $Test->ok(1, "skipped (under $mod)");
+    }
 
-	# calls to prepare cache in $block
-	$block->();
+    # calls to prepare cache in $block
+    $block->();
 
-	my $got = _do_leaktrace($block, 'leaked_count', 0);
+    my $got = _do_leaktrace($block, 'leaked_count', 0);
 
-	my $desc = sprintf 'leaks %s %-2s %s', $got, $cmp_op, $expected;
-	if(defined $description){
-		$description .= " ($desc)";
-	}
-	else{
-		$description = $desc;
-	}
+    my $desc = sprintf 'leaks %s %-2s %s', $got, $cmp_op, $expected;
+    if(defined $description){
+        $description .= " ($desc)";
+    }
+    else{
+        $description = $desc;
+    }
 
-	my $result = $Test->cmp_ok($got, $cmp_op, $expected, $description);
+    my $result = $Test->cmp_ok($got, $cmp_op, $expected, $description);
 
-	if(!$result){
-		open local(*STDERR), '>', \(my $content = '');
-		$block->(); # calls it again because opening *STDERR changes the run-time environment
+    if(!$result){
+        open local(*STDERR), '>', \(my $content = '');
+        $block->(); # calls it again because opening *STDERR changes the run-time environment
 
-		_do_leaktrace($block, 'leaktrace', 1, -verbose);
-		$Test->diag($content);
-	}
+        _do_leaktrace($block, 'leaktrace', 1, -verbose);
+        $Test->diag($content);
+    }
 
-	return $result;
+    return $result;
 }
 
 sub no_leaks_ok(&;$){
-	# ($block, $description)
-	splice @_, 1, 0, ('==', 0); # ($block, '==', 0, $description);
-	goto &leaks_cmp_ok;
+    # ($block, $description)
+    splice @_, 1, 0, ('==', 0); # ($block, '==', 0, $description);
+    goto &leaks_cmp_ok;
 }
 
 
@@ -126,47 +126,47 @@ This document describes Test::LeakTrace version 0.11.
 
 =head1 SYNOPSIS
 
-	use Test::LeakTrace;
+    use Test::LeakTrace;
 
-	# simple report
-	leaktrace{
-		# ...
-	};
+    # simple report
+    leaktrace{
+        # ...
+    };
 
-	# verbose output
-	leaktrace{
-		# ...
-	} -verbose;
+    # verbose output
+    leaktrace{
+        # ...
+    } -verbose;
 
-	# with callback
-	leaktrace{
-		# ...
-	} sub {
-		my($ref, $file, $line) = @_;
-		warn "leaked $ref from $file line\n";
-	};
+    # with callback
+    leaktrace{
+        # ...
+    } sub {
+        my($ref, $file, $line) = @_;
+        warn "leaked $ref from $file line\n";
+    };
 
-	my @refs = leaked_refs{
-		# ...
-	};
-	my @info = leaked_info{
-		# ...
-	};
+    my @refs = leaked_refs{
+        # ...
+    };
+    my @info = leaked_info{
+        # ...
+    };
 
-	my $count = leaked_count{
-		# ...
-	};
+    my $count = leaked_count{
+        # ...
+    };
 
-	# standard test interface
-	use Test::LeakTrace;
+    # standard test interface
+    use Test::LeakTrace;
 
-	no_leaks_ok{
-		# ...
-	} 'no memory leaks';
+    no_leaks_ok{
+        # ...
+    } 'no memory leaks';
 
-	leaks_cmp_ok{
-		# ...
-	} '<', 10;
+    leaks_cmp_ok{
+        # ...
+    } '<', 10;
 
 =head1 DESCRIPTION
 
@@ -246,18 +246,18 @@ Like C<Devel::LeakTrace> C<Test::LeakTrace::Script> is provided for whole script
 
 The arguments of C<use Test::LeakTrace::Script> directive is the same as C<leaktrace()>.
 
-	$ TEST_LEAKTRACE=-sv_dump perl -MTest::LeakTrace::Script script.pl
-	$ perl -MTest::LeakTrace::Script=-verbose script.pl
+    $ TEST_LEAKTRACE=-sv_dump perl -MTest::LeakTrace::Script script.pl
+    $ perl -MTest::LeakTrace::Script=-verbose script.pl
 
-	#!perl
-	# ...
+    #!perl
+    # ...
 
-	use Test::LeakTrace::Script sub{
-		my($ref, $file, $line) = @_;
-		# ...
-	};
+    use Test::LeakTrace::Script sub{
+        my($ref, $file, $line) = @_;
+        # ...
+    };
 
-	# ...
+    # ...
 
 =head1 EXAMPLES
 
@@ -265,19 +265,19 @@ The arguments of C<use Test::LeakTrace::Script> directive is the same as C<leakt
 
 Here is a test script template that checks memory leaks.
 
-	#!perl -w
-	use strict;
-	use constant HAS_LEAKTRACE => eval{ require Test::LeakTrace };
-	use Test::More HAS_LEAKTRACE ? (tests => 1) : (skip_all => 'require Test::LeakTrace');
-	use Test::LeakTrace;
+    #!perl -w
+    use strict;
+    use constant HAS_LEAKTRACE => eval{ require Test::LeakTrace };
+    use Test::More HAS_LEAKTRACE ? (tests => 1) : (skip_all => 'require Test::LeakTrace');
+    use Test::LeakTrace;
 
-	use Some::Module;
+    use Some::Module;
 
-	leaks_cmp_ok{
-		my $o = Some::Module->new();
-		$o->something();
-		$o->something_else();
-	} '<', 1;
+    leaks_cmp_ok{
+        my $o = Some::Module->new();
+        $o->something();
+        $o->something_else();
+    } '<', 1;
 
 =head1 DEPENDENCIES
 
