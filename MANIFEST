@@ -42,6 +42,8 @@ t/09_info_more.t
 t/10_bad_use.t
 t/11_logfp.t
 t/12_padstale.t
+t/13_do.t
+t/lib/foo.pl
 xt/01_podspell.t
 xt/02_pod.t
 xt/03_pod-coverage.t

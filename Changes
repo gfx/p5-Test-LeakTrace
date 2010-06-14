@@ -1,6 +1,7 @@
 Revision history for Perl extension Test::LeakTrace
 
-0.11
+0.11 Mon Jun 14 16:16:49 2010
+    - Resolve RT #58133: "False-positive related to XS code"
 
 0.10 Wed Jul  1 15:36:57 2009
 	- support for Test::More subtests (http://use.perl.org/~Ovid/journal/39193)
