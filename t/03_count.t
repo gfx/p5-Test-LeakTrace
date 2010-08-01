@@ -12,8 +12,8 @@ sub normal{
 	$a{b} = 1;
 	$b{a} = 2;
 }
-is leaked_count(\&normal), 0, 'not leaked(1)';
-is leaked_count(\&normal), 0, 'not leaked(2)';
+cmp_ok leaked_count(\&normal), '<=', 0, 'not leaked(1)';
+cmp_ok leaked_count(\&normal), '<=', 0, 'not leaked(2)';
 
 sub leaked{
 	my %a;

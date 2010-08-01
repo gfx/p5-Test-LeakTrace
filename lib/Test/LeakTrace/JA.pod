@@ -7,7 +7,7 @@ Test::LeakTrace::JA - メモリリークを追跡する
 
 =head1 VERSION
 
-This document describes Test::LeakTrace version 0.12.
+This document describes Test::LeakTrace version 0.13.
 
 =head1 SYNOPSIS
 
