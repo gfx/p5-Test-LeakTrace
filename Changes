@@ -1,5 +1,9 @@
 Revision history for Perl extension Test::LeakTrace
 
+0.12 Sun Aug  1 15:11:34 2010
+    - Use ">= 0", instead of "== 0" for no_leaks_ok()
+    - Add count_sv() to count all the SVs in a perl interpreter
+
 0.11 Mon Jun 14 16:16:49 2010
     - Resolve RT #58133: "False-positive related to XS code"
 
