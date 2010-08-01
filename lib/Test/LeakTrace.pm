@@ -113,7 +113,7 @@ sub leaks_cmp_ok(&$$;$){
 
 sub no_leaks_ok(&;$){
     # ($block, $description)
-    splice @_, 1, 0, ('==', 0); # ($block, '==', 0, $description);
+    splice @_, 1, 0, ('<=', 0); # ($block, '<=', 0, $description);
     goto &leaks_cmp_ok;
 }
 
