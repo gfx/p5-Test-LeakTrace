@@ -32,6 +32,13 @@ sub _do_leaktrace{
         warnings::warnif void => "Useless use of $name() in void context";
     }
 
+    if($name eq 'leaked_count') {
+        my $start;
+        $start = _count_sv_in_arena();
+        $block->();
+        return _count_sv_in_arena() - $start;
+    }
+
     local $SIG{__DIE__} = 'DEFAULT';
 
     _start($need_stateinfo);
@@ -81,11 +88,7 @@ sub leaks_cmp_ok(&$$;$){
     # calls to prepare cache in $block
     $block->();
 
-    #my $got = _do_leaktrace($block, 'leaked_count', 0);
-    my($start, $got);
-    $start = _count_sv_in_arena();
-    $block->();
-    $got   = _count_sv_in_arena() - $start;
+    my $got = _do_leaktrace($block, 'leaked_count', 0);
 
     my $desc = sprintf 'leaks %s %-2s %s', $got, $cmp_op, $expected;
     if(defined $description){

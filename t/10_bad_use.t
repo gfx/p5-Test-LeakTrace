@@ -7,8 +7,8 @@ use Test::LeakTrace;
 
 for(1 .. 2){
 	eval{
-		my $count = leaked_count{
-			my $count = leaked_count{
+		my @a = leaked_refs{
+			my @b = leaked_refs{
 				my %a = (foo => 42);
 				my %b = (bar => 3.14);
 
