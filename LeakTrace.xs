@@ -499,7 +499,7 @@ OUTPUT:
     RETVAL
 
 UV
-_count_sv_in_arena()
+count_sv()
 CODE:
     RETVAL = count_sv_in_arena(aTHX);
 OUTPUT:

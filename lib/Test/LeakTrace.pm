@@ -16,12 +16,13 @@ use Exporter qw(import); # use Exporter::import for backward compatibility
 our @EXPORT = qw(
     leaktrace leaked_refs leaked_info leaked_count
     no_leaks_ok leaks_cmp_ok
+    count_sv
 );
 
 our %EXPORT_TAGS = (
     all  => \@EXPORT,
     test => [qw(no_leaks_ok leaks_cmp_ok)],
-    util => [qw(leaktrace leaked_refs leaked_info leaked_count)],
+    util => [qw(leaktrace leaked_refs leaked_info leaked_count count_sv)],
 );
 
 
@@ -34,9 +35,9 @@ sub _do_leaktrace{
 
     if($name eq 'leaked_count') {
         my $start;
-        $start = _count_sv_in_arena();
+        $start = count_sv();
         $block->();
-        return _count_sv_in_arena() - $start;
+        return count_sv() - $start;
     }
 
     local $SIG{__DIE__} = 'DEFAULT';
@@ -247,6 +248,10 @@ function using C<Test::Builder>.
 Note that I<BLOCK> is called more than once. This is because
 I<BLOCK> might prepare caches which are not memory leaks.
 
+=head3 C<< count_sv() >>
+
+Counts all the SVs in the arena.
+
 =head2 Script interface
 
 Like C<Devel::LeakTrace> C<Test::LeakTrace::Script> is provided for whole scripts.
@@ -326,7 +331,7 @@ Goro Fuji(gfx) E<lt>gfuji(at)cpan.orgE<gt>.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2009, Goro Fuji(gfx). Some rights reserved.
+Copyright (c) 2009-2010, Goro Fuji(gfx). All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
