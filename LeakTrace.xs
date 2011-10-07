@@ -361,6 +361,15 @@ CODE:
     PERL_UNUSED_VAR(items);
 
 void
+END(...)
+CODE:
+    dMY_CXT;
+    // release resources for valgrind
+    Safefree(MY_CXT.file);
+    MY_CXT.file = NULL;
+    PERL_UNUSED_VAR(items);
+
+void
 _start(bool need_stateinfo)
 PREINIT:
     dMY_CXT;
