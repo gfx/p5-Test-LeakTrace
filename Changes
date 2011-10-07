@@ -1,5 +1,8 @@
 Revision history for Perl extension Test::LeakTrace
 
+0.14 2011-10-07 02:22:11
+    - Fix Test::Valgrind failures (thanks to @shohex)
+
 0.13 Sun Aug  1 15:17:23 2010
     - Fix tests for older perls
 

@@ -48,3 +48,4 @@ xt/01_podspell.t
 xt/02_pod.t
 xt/03_pod-coverage.t
 xt/04_synopsis.t
+xt/05_valgrind.t

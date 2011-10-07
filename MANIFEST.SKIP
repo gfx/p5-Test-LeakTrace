@@ -39,3 +39,6 @@
 # skip author's files
 \bauthor\b
 
+LeakTrace\.(?:bs|o|c)
+MYMETA\.(?:json|yml)
+
