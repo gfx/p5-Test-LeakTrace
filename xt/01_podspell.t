@@ -3,9 +3,9 @@
 use strict;
 use Test::More;
 
-eval q{ use Test::Spelling };
+eval q{ use Test::Spellunker};
 
-plan skip_all => q{Test::Spelling is not installed.}
+plan skip_all => q{Test::Spellunker is not installed.}
 	if $@;
 
 add_stopwords(map { split /[\s\:\-]/ } <DATA>);
