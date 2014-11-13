@@ -21,22 +21,22 @@ $_ = 'defsv';
 
 my $file = __FILE__;
 t(-simple);
-like $content,   qr/from $file line 15\./, -simple;
+like $content,   qr/from \Q$file\E line 15\./, -simple;
 unlike $content, qr/15:\t\tpush \@array/, -lines;
 unlike $content, qr/REFCNT/, -sv_dump;
 
 t(-lines);
-like $content, qr/from $file line 15\./, -simple;
+like $content, qr/from \Q$file\E line 15\./, -simple;
 like $content, qr/15:\t\tpush \@array/, -lines;
 unlike $content, qr/REFCNT/, -sv_dump;
 
 t(-sv_dump);
-like $content, qr/from $file line 15\./, -simple;
+like $content, qr/from \Q$file\E line 15\./, -simple;
 unlike $content, qr/15:\t\tpush \@array/, -lines;
 like $content, qr/REFCNT/, -sv_dump;
 
 t(-verbose);
-like $content, qr/from $file line 15\./, -simple;
+like $content, qr/from \Q$file\E line 15\./, -simple;
 like $content, qr/15:\t\tpush \@array/, -lines;
 like $content, qr/REFCNT/, -sv_dump;
 
