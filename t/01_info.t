@@ -25,7 +25,7 @@ my($si) = grep {
 	} @info;
 
 
-like __FILE__, qr/$si->[1]/, 'state info'
+like __FILE__, qr/\Q$si->[1]\E/, 'state info'
 	or diag(Dumper \@info);
 
 @info = leaked_info{
