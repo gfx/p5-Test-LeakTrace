@@ -24,3 +24,4 @@ cover_db*
 *.stackdump
 *.c
 *~
+Test-LeakTrace-*.tar.gz
