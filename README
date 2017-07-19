@@ -9,6 +9,9 @@ you should just be able to do
 
 Download it, unpack it, then build it as per the usual:
 
+    $ rm -rf inc/
+    $ cpanm Module::Install
+    $ cpanm Module::Install::{AuthorTests,Base,Makefile,MakeMaker,Metadata,Repository}
     $ perl Makefile.PL
     $ make && make test
 
